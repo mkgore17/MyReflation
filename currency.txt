@@ -1,0 +1,46 @@
+curreny code map in checking server   ,identify currency syma,KCI 
+KCIPNRIDResponse :getCurrencyCode());
+
+
+one more tg
+
+
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1 ">
+<style>
+.alert {
+  padding: 50px;
+  background-color:#B0C4DE;
+  color: white;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+</style>
+</head>
+<body>
+
+
+<div class="alert AlignCenter" >
+
+
+ 
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <span class="fa fa-exclamation-circle"style="color:white"<P> Info importante: Tu destino puede tener requisitos especÃ­ficos sobre COVID!.</P></span> 
+  
+</div>

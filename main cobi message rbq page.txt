@@ -1,0 +1,389 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<%@ page pageEncoding="UTF-8" %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"  %>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<html lang="<spring:message code="global.languauge"/>">
+<head>
+ 	<jsp:include page="header.jsp"></jsp:include>
+ 	<title><spring:message code="headTitle.heading.regularBaggage"/> | <spring:message code="global.title"/></title>
+	<jsp:include page="brightTag.jsp">
+		<jsp:param name="uniquePageName" value="RegularBagsQuestion"/>
+	</jsp:include>
+	<script src="js/refreshSession.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	var pleaseWaitBags = "<spring:message code='pleaseWaitPopup.queryBags'/>";
+	var pleaseWaitNoBags = "<spring:message code='pleaseWaitPopup.confirmCheckin'/>";
+	$(document).ready(function(e) {
+		<c:forEach var="passenger" items="${itinerary.passengers}">
+			<c:if test="${passenger.carryOnBagNotAllowed}">	
+				<c:set var="carryOnBagNotAllowed" value="true" scope="page"/>
+			</c:if>
+	    </c:forEach>
+	});
+	function submitAndRedirect(){
+	var form = $("#mainForm");
+	form.attr('action', form.attr('action') + "&_eventId_endSession=true&transactionId="+transactionId);
+	form.submit();
+}
+	</script>
+	<style>area:focus{
+  border: none;
+  outline-style: none; 
+  -moz-outline-style:none;  
+}</style> 	
+</head>
+<body>
+  	<f:form commandName="regularBagsQuestion" id="mainForm">
+  		
+  		<!-- Header page that contains the home button -->
+			<div class="JetLogo" id="JetLogo"><img src="images/Header.png" usemap="#logomap" alt="Jet Blue" tabindex="0" style="margin-left:10px;"/>
+			<map name="logomap">
+				<area shape="rect" coords="0,0,120,120" id="logoClick"  href="#" target="_self" alt="Jet Blue Logo" onclick="submitAndRedirect();return true;">
+			</map>
+				<button type="button" class="buttonBlueSm showpopup" id="quitButton" onclick="showPopUp('popupyesno',event) " tabindex="1"><spring:message code="button.quit"/></button>
+			</div>
+		<!-- Header End -->
+		<jsp:include page="progressIndicator.jsp">
+			<jsp:param name="plane_location" value="BAGGAGE" />
+		</jsp:include>
+  		<div id="Content">
+	  		<div id="ContentIn">
+				<div class="ContentOut">
+				
+				<div class="Clear">
+					<div class="dvHeadTitle" style="width:90%">
+						<div class="dvHeadTitlright ">
+							<h1 class="TitleText" tabindex="1"><spring:message code='headTitle.heading.regularBaggage'/></h1>
+						</div>
+					</div>
+				</div>
+				
+				<jsp:include page="popup.jsp"/>
+					<div class="Clear">
+						<div class="width-full" style="width:90%;margin-top: 5px;">
+				  			
+							<span class="font-description" tabindex="1">
+								<spring:message code="bagQuestion.heading" arguments="${checkinOptions.tagToDestinationCityText},${checkinOptions.tagToDestinationCityCode}"/>				   			
+			   				</span>
+			   				
+			   				<div class="divRow">
+						<span>&nbsp;</span></div>
+						</div>
+					
+							
+							<div class="width-full jetblue-table bagsQuestionTable" cellspacing="0" >
+							
+								<div class="divRowFlex bannerRow" >
+								<span  class="divCol25 topBannerIncluded" tabindex="2" ><img src="images/WhiteChk.png"/ align="left" >
+									<h2 class="topBannerIncluded" style="text-align:left">
+										<spring:message code="bagQuestion.personalItemHeading"/>
+									</h2>
+								</span>
+								<span class="tinySpace"></span>
+								<c:if test="${!carryOnBagNotAllowed}">
+								<span class="divCol25 topBannerIncluded" tabindex="3"><img src="images/WhiteChk.png"/align="left" >
+									<h2 class="topBannerIncluded">
+										<spring:message code="bagQuestion.carryOnHeading"/>
+									</h2>
+								</span>
+								</c:if>
+								<c:if test="${carryOnBagNotAllowed}">
+
+						      <span class="divCol25 topBannerAdditional" tabindex="4"  margin-left="20px">
+									<h2 class="topBannerIncluded" >
+										No Carry On Bags
+									</h2>
+								</span>
+						      </c:if>
+								<span class="tinySpace"></span>
+								<span class="divCol50 topBannerAdditional" tabindex="4" >
+									<h2 class="size16NotBold" align="left">
+										<spring:message code="bagQuestion.checkedBagsHeading"/>
+									</h2>
+								</span>
+								</div>
+								
+								
+							
+								<div class="divRowFlex blue">
+									<span id="carryOn" class="divCol22 bagImg bagQuestionCol" style="padding-top:10px;"><img alt="" style="width:30px; height:36px;"src="images/baggage/BagsScreenLogo_PERSONAL-ITEM.png"/><p class="heading" style="width: 73%;display: inline-block;vertical-align: top;padding-left: 10px;"><spring:message code="bagQuestion.personalItemSubHeading"/></p></span>
+									<span class="tinySpace"></span>
+										<c:if test="${!carryOnBagNotAllowed}">
+									<span id="allowance1" class="divCol22 bagImg bagQuestionCol" style="padding-top:10px;"><img alt="center" style=" position:center width:48px; height:36px;" src="images/baggage/BagsScreenLogo_CARRY-ON.png"/><p class="heading" style="width: 67%;display: inline-block;vertical-align: top;padding-left: 10px;"><spring:message code="bagQuestion.carryOnSubHeading"/></p></span>
+									</c:if>
+									<c:if test="${carryOnBagNotAllowed}">
+								 <span id="allowance1" class="divCol22 bagImg bagQuestionCol" style="padding-top:10px;" ><img alt="margin-right: auto;" style="width:48px; height:36px;" src="images/baggage/BagsScreenLogo_CARRY-ON.png"/><p class="heading" style="width: 67%;display: inline-block;vertical-align: top;padding-left: 10px;">No carry-on bags allowed</p></span>
+								</c:if>
+									<span class="tinySpace"></span>
+									<span id="additionalBag"  class="divCol22 bagImg"  style="padding-top:10px;"><img alt="centered image" style="width:44px; height:68px;"   "" src="images/baggage/BagsScreenLogo_CHECK-IN.png"/   ></span>
+									<span class="tinySpace" style="width:0.2%;"></span>
+									<span id="overweight" class="divCol22 bagImg" style="padding-top:10px;"><img alt="" style="width:44px; height:68px;"    src="images/baggage/BagsScreenLogo_OVERSIZED.png"/></span>
+								</div>
+									
+								
+								
+								<div class="divRowFlex blue">
+									<span class="bagQuestionCol" tabindex="2">
+									<p class="regular"><spring:message code="bagQuestion.personalItemBody"/></p></span>
+									<span class="tinySpace"></span>
+									<c:if test="${!carryOnBagNotAllowed}">
+									<span class="bagQuestionCol" tabindex="3">
+									<p class="regular"><spring:message code="bagQuestion.carryOnBody"/></p>
+									</span>
+									</c:if>
+									<c:if test="${carryOnBagNotAllowed}">
+									<span class="bagQuestionCol" tabindex="3">
+									<p class="regular">Exception: Mosaic members, travelers combining a Blue Basic fare with an Even More® Space seat (on all legs, if connecting), active military and unaccompanied minors.
+
+Bags larger than a personal item brought to the gate will be checked and incur a minimum fee of $65.
+
+                                    </p>
+									</span>
+									</c:if>
+									<span class="tinySpace"></span>
+									<span class="bagQuestionCol" tabindex="4">
+									<p class="regular"><spring:message code="bagQuestion.checkedBagsBody"/></p>
+									</span>
+									<span class="tinySpace" style="width:0.2%;"></span>
+									<span class="bagQuestionCol" tabindex="5" style="padding-top: 15px;">
+										<p class="heading" style="font-size: 16px;color: black;"><spring:message code="bagQuestion.oversizedHeading"/></p>
+										<p class="regular" style="padding-top: 0px;"><spring:message code="bagQuestion.oversizedBody" /></p>
+										<p class="heading" style="font-size: 16px;color: black;"><spring:message code="bagQuestion.overweightHeading"/></p>
+										<p class="regular" style="padding-top: 0px;"><spring:message code="bagQuestion.overweightBody" /></p>
+									</span>
+								</div>	
+								
+								
+						
+								<div style="height:15px;">&nbsp</div>
+								
+								<span class="divRow" >
+								<span colspan="7" style="background:white;">
+									
+										<span class="divRow" >
+											<span class="spacer" style="background:white;float:left;width:0px;"></span>
+											<span style="background:white;">
+<%-- 												<table id="yesBagsButton"
+													class="submit buttonGrey btnFloatLeft"
+													onclick="pleaseWaitText = pleaseWaitBags;">
+													<tr>
+														<td id="buttonText"><spring:message
+																code="button.yesBags" /></td>
+													</tr>
+												</table> --%>
+												<button type="button" class="buttonGrey btnFloatLeft" id="yesBagsButton" name="submitButton" tabindex="6"><spring:message code="button.yesBags"/></button>
+											</span>
+											<span style="background:white;padding:10px;float:left;">
+<%-- 												<table id="noButton"
+													class="submit buttonBlue btnFloatLeft"
+													onclick="pleaseWaitText = pleaseWaitNoBags;">
+													<tr>
+														<td id="buttonText"><spring:message
+																code="button.noBags" />
+														</td>
+													</tr>
+												</table> --%>
+												<%-- <button type="button" class="buttonBlue btnFloatLeft" id="noButton" name="submitButton"><spring:message code="button.noBags"/></button> --%>
+											
+												
+											<c:if test="${!carryOnBagNotAllowed}">
+											
+											<a href="#" id="noButton" name="submitButton" style="font-size:15px; font-weight:bold;padding-left: 5px;" tabindex="6"  onClick="showPopUp('baggageInformation');return false"><spring:message code="button.noBags"/></a>
+										</c:if>
+										<c:if test="${carryOnBagNotAllowed}">
+										<a href="#" id="noButton" name="submitButton" style="font-size:15px; font-weight:bold;padding-left: 5px;" tabindex="6" ><spring:message code="button.noBags"/></a>
+										</c:if>
+										</span>
+											
+										</span>
+									</span>
+								</span>
+								<span id="activeMillitaryText" class="divColMillitaryMsg" style="margin-left:0px;width:48%;float:right;" tabindex="6"><spring:message code="bagQuestion.activeMilaryText"/></span>
+							</div>
+												
+			   		</div>							
+		   									
+				</div>
+			</div>
+		</div>
+ 		<!-- Footer Start -->
+		<jsp:include page="footer.jsp">
+		<jsp:param name="buttons" value="quit" /></jsp:include>
+		<!-- Footer End --> 
+  	</f:form>
+</body>
+
+<%@ page pageEncoding="UTF-8" %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"  %>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<html lang="<spring:message code="global.languauge"/>">
+<head>
+ 	<jsp:include page="header.jsp"></jsp:include>
+ 	<title><spring:message code="headTitle.heading.regularBaggage"/> | <spring:message code="global.title"/></title>
+	<jsp:include page="brightTag.jsp">
+		<jsp:param name="uniquePageName" value="RegularBagsQuestion"/>
+	</jsp:include>
+	<script src="js/refreshSession.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	var pleaseWaitBags = "<spring:message code='pleaseWaitPopup.queryBags'/>";
+	var pleaseWaitNoBags = "<spring:message code='pleaseWaitPopup.confirmCheckin'/>";
+	function submitAndRedirect(){
+	var form = $("#mainForm");
+	form.attr('action', form.attr('action') + "&_eventId_endSession=true&transactionId="+transactionId);
+	form.submit();
+}
+	</script>
+	<style>area:focus{
+  border: none;
+  outline-style: none; 
+  -moz-outline-style:none;  
+}</style> 	
+</head>
+<body>
+  	<f:form commandName="regularBagsQuestion" id="mainForm">
+  		
+  		<!-- Header page that contains the home button -->
+			<div class="JetLogo" id="JetLogo"><img src="images/Header.png" usemap="#logomap" alt="Jet Blue" tabindex="0" style="margin-left:10px;"/>
+			<map name="logomap">
+				<area shape="rect" coords="0,0,120,120" id="logoClick"  href="#" target="_self" alt="Jet Blue Logo" onclick="submitAndRedirect();return true;">
+			</map>
+				<button type="button" class="buttonBlueSm showpopup" id="quitButton" onclick="showPopUp('popupyesno',event) " tabindex="1"><spring:message code="button.quit"/></button>
+			</div>
+		<!-- Header End -->
+		<jsp:include page="progressIndicator.jsp">
+			<jsp:param name="plane_location" value="BAGGAGE" />
+		</jsp:include>
+  		<div id="Content">
+	  		<div id="ContentIn">
+				<div class="ContentOut">
+				
+				<div class="Clear">
+					<div class="dvHeadTitle" style="width:90%">
+						<div class="dvHeadTitlright ">
+							<h1 class="TitleText" tabindex="1"><spring:message code='headTitle.heading.regularBaggage'/></h1>
+						</div>
+					</div>
+				</div>
+				
+				<jsp:include page="popup.jsp"/>
+					<div class="Clear">
+						<div class="width-full" style="width:90%;margin-top: 5px;">
+				  			
+							<span class="font-description" tabindex="1">
+								<spring:message code="bagQuestion.heading" arguments="${checkinOptions.tagToDestinationCityText},${checkinOptions.tagToDestinationCityCode}"/>				   			
+			   				</span>
+			   				
+			   				<div class="divRow">
+						<span>&nbsp;</span></div>
+						</div>
+							
+							<div class="width-full jetblue-table bagsQuestionTable" cellspacing="0">
+								<div class="divRowFlex bannerRow" >
+								<span  class="divCol25 topBannerIncluded" tabindex="2"><img src="images/WhiteChk.png"/>
+									<h2 class="topBannerIncluded">
+										<spring:message code="bagQuestion.personalItemHeading"/>
+									</h2>
+								</span>
+								<span class="tinySpace"></span>
+								<span class="divCol25 topBannerIncluded" tabindex="3"><img src="images/WhiteChk.png"/>
+									<h2 class="topBannerIncluded">
+										<spring:message code="bagQuestion.carryOnHeading"/>
+									</h2>
+								</span>
+								<span class="tinySpace"></span>
+								<span class="divCol50 topBannerAdditional" tabindex="4">
+									<h2 class="size16NotBold">
+										<spring:message code="bagQuestion.checkedBagsHeading"/>
+									</h2>
+								</span>
+								</div>
+								<div class="divRowFlex blue">
+									<span id="carryOn" class="divCol22 bagImg bagQuestionCol" style="padding-top:10px;"><img alt="" style="width:30px; height:36px;"src="images/baggage/BagsScreenLogo_PERSONAL-ITEM.png"/><p class="heading" style="width: 73%;display: inline-block;vertical-align: top;padding-left: 10px;"><spring:message code="bagQuestion.personalItemSubHeading"/></p></span>
+									<span class="tinySpace"></span>
+									<span id="allowance1" class="divCol22 bagImg bagQuestionCol" style="padding-top:10px;"><img alt="" style="width:48px; height:36px;" src="images/baggage/BagsScreenLogo_CARRY-ON.png"/><p class="heading" style="width: 67%;display: inline-block;vertical-align: top;padding-left: 10px;"><spring:message code="bagQuestion.carryOnSubHeading"/></p></span>
+									<span class="tinySpace"></span>
+									<span id="additionalBag" class="divCol22 bagImg" style="padding-top:10px;"><img alt="" style="width:44px; height:68px;" src="images/baggage/BagsScreenLogo_CHECK-IN.png"/></span>
+									<span class="tinySpace" style="width:0.2%;"></span>
+									<span id="overweight" class="divCol22 bagImg" style="padding-top:10px;"><img alt="" style="width:54px; height:67px;" src="images/baggage/BagsScreenLogo_OVERSIZED.png"/></span>
+								</div>
+								<div class="divRowFlex blue">
+									<span class="bagQuestionCol" tabindex="2">
+									<p class="regular"><spring:message code="bagQuestion.personalItemBody"/></p></span>
+									<span class="tinySpace"></span>
+									<span class="bagQuestionCol" tabindex="3">
+									<p class="regular"><spring:message code="bagQuestion.carryOnBody"/></p>
+									</span>
+									<span class="tinySpace"></span>
+									<span class="bagQuestionCol" tabindex="4">
+									<p class="regular"><spring:message code="bagQuestion.checkedBagsBody"/></p>
+									</span>
+									<span class="tinySpace" style="width:0.2%;"></span>
+									<span class="bagQuestionCol" tabindex="5" style="padding-top: 15px;">
+										<p class="heading" style="font-size: 16px;color: black;"><spring:message code="bagQuestion.oversizedHeading"/></p>
+										<p class="regular" style="padding-top: 0px;"><spring:message code="bagQuestion.oversizedBody" /></p>
+										<p class="heading" style="font-size: 16px;color: black;"><spring:message code="bagQuestion.overweightHeading"/></p>
+										<p class="regular" style="padding-top: 0px;"><spring:message code="bagQuestion.overweightBody" /></p>
+									</span>
+								</div>	
+						
+								<div style="height:15px;">&nbsp</div>
+								
+								<span class="divRow" >
+								<span colspan="7" style="background:white;">
+									
+										<span class="divRow" >
+											<span class="spacer" style="background:white;float:left;width:0px;"></span>
+											<span style="background:white;">
+<%-- 												<table id="yesBagsButton"
+													class="submit buttonGrey btnFloatLeft"
+													onclick="pleaseWaitText = pleaseWaitBags;">
+													<tr>
+														<td id="buttonText"><spring:message
+																code="button.yesBags" /></td>
+													</tr>
+												</table> --%>
+												<button type="button" class="buttonGrey btnFloatLeft" id="yesBagsButton" name="submitButton" tabindex="6"><spring:message code="button.yesBags"/></button>
+											</span>
+											<span style="background:white;padding:10px;float:left;">
+<%-- 												<table id="noButton"
+													class="submit buttonBlue btnFloatLeft"
+													onclick="pleaseWaitText = pleaseWaitNoBags;">
+													<tr>
+														<td id="buttonText"><spring:message
+																code="button.noBags" />
+														</td>
+													</tr>
+												</table> --%>
+												<%-- <button type="button" class="buttonBlue btnFloatLeft" id="noButton" name="submitButton"><spring:message code="button.noBags"/></button> --%>
+												<a href="#" id="noButton" name="submitButton" style="font-size:15px; font-weight:bold;padding-left: 5px;" tabindex="6" onClick="showPopUp('baggageInformation');"><spring:message code="button.noBags"/></a>
+											</span>
+											
+										</span>
+									</span>
+								</span>
+								<span id="activeMillitaryText" class="divColMillitaryMsg" style="margin-left:0px;width:48%;float:right;" tabindex="6"><spring:message code="bagQuestion.activeMilaryText"/></span>
+							</div>
+						
+			   									
+			   		</div>							
+		   									
+				</div>
+			</div>
+		</div>
+ 		<!-- Footer Start -->
+		<jsp:include page="footer.jsp">
+		<jsp:param name="buttons" value="quit" /></jsp:include>
+		<!-- Footer End --> 
+  	</f:form>
+</body>
